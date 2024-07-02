@@ -1,14 +1,17 @@
-FROM php:8.3.8-apache-bookworm
+FROM php:8.3.8-apache-bookworm 
+    #https://github.com/docker-library/docs/tree/master/php
 LABEL maintainer="tux-box@github"
 LABEL version=1.0
 LABEL description="This is a container to run DayZ private hive tools, you must use an existing/external DB!"
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
-RUN apt install curl git unzip
-RUN docker-php-ext-install php-mysql
+RUN apt install curl git unzip -y
+RUN git config --global core.symlinks false
 
-## todo: 
+RUN docker-php-ext-install mysqli 
+    #https://github.com/mlocati/docker-php-extension-installer
+
     #download the PHT
 RUN git clone https://github.com/n8m4re/PrivateHiveTools.git /tmp/PHT
     #download the maps
@@ -24,8 +27,7 @@ RUN a2ensite pht.conf
 EXPOSE 80
 EXPOSE 443
 
-
-#Do we do purposed containers and link thme or all in one app services?
+#Do we do dedicated containers and link them or all in one app services?
     #setup mariadb https://github.com/MariaDB/mariadb-docker/blob/11135d071fd1fe355b1f7fa99b9d3b4a59bb5225/11.5/Dockerfile
 # RUN groupadd -r mysql && useradd -r -g mysql mysql --home-dir /var/lib/mysql
     #setup phpmyadmin https://docs.phpmyadmin.net/en/latest/setup.html
