@@ -6,14 +6,13 @@ LABEL description="This is a container to run DayZ private hive tools, you must 
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
-RUN apt install curl git unzip -y
-RUN git config --global core.symlinks false
+RUN apt install curl unzip -y
+#RUN git config --global core.symlinks false
 
 RUN docker-php-ext-install mysqli 
     #https://github.com/mlocati/docker-php-extension-installer
-
     #download the PHT
-RUN git clone https://github.com/n8m4re/PrivateHiveTools.git /tmp/PHT
+ADD https://github.com/n8m4re/PrivateHiveTools.git /tmp/PHT
     #download the maps
 RUN curl https://downloads.n8m4re.com/arma2_dayz/maps.zip -o /tmp/PHT/maps.zip
     #unzip the maps
@@ -32,3 +31,6 @@ EXPOSE 443
 # RUN groupadd -r mysql && useradd -r -g mysql mysql --home-dir /var/lib/mysql
     #setup phpmyadmin https://docs.phpmyadmin.net/en/latest/setup.html
     # https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-apache-on-a-centos-7-server
+
+# Have something run, apache2 php with pht
+CMD [“apache2ctl”, “-D”, “FOREGROUND”]
